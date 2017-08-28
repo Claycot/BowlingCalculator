@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <deque>
 
 using namespace std;
 
@@ -36,20 +38,41 @@ int main (int argc, char* argv[]) {
 	string testPerfect = "X X X X X X X X X XXX"; // = 300
 	
 	string userInput = "q";
+	deque<string> fileInput = {};
+	
+	if (argc == 2) {
+		//Get bowling strings from file
+		ifstream inputFile;
+		inputFile.open("input.txt");	
+		string tempLine = "";
+		while (!inputFile.eof()) {
+			inputFile >> ws;	
+			getline(inputFile, tempLine);
+			fileInput.push_back(tempLine);
+		}
+		inputFile.close();
+	}
 		
 	do {
 		int score = 0;
 		int frameScore[10] = {};
 		int ballsInFrame[10] = {};
-		int indexFrame[10] = {};
-		Ball gameBalls[21] = {};
+		int indexFrame[10] = {};		
+		Ball gameBalls[21] = {};	
 		
-		//Get bowling line from the user		
-		cout << "Enter the bowling line, or 'q' to quit.\n";
-		userInput = "q";
-		cin >> ws;
-		getline(cin, userInput);
-		
+		if (fileInput.empty()) {
+			//Get bowling line from the user		
+			cout << "Enter the bowling line, or 'q' to quit.\n";
+			userInput = "q";
+			cin >> ws;
+			getline(cin, userInput);
+		}
+		else {
+			//Get bowling line from filled deque
+			userInput = fileInput.front();
+			fileInput.pop_front();
+		}
+				
 		if (userInput != "q" && userInput != "Q"){
 			//Get a good input
 			string goodInput = processInput(userInput, ballsInFrame);
@@ -147,6 +170,9 @@ int scoreFrame(Ball gameBalls[], int strikeShift, int index) {
 	}
 	else if (ballOne == BALL_STRIKE) {
 		Ball ballThree = gameBalls[strikeShift + 2];
+		if (ballThree == BALL_SPARE) {
+			ballThree = static_cast<Ball>(10 - static_cast<int>(ballTwo));
+		}
 		score += (10 + ballTwo + ballThree);
 	}
 	
@@ -170,7 +196,7 @@ Ball charToBall(char inputChar) {
 	
 	//Additional check in case strikes were lower-case
 	if (inputChar == 'x') {
-		outputBall = static_cast<Ball>(10);
+		outputBall = BALL_STRIKE;
 	}
 	
 	return outputBall;
