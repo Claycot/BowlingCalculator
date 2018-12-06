@@ -209,21 +209,22 @@ Ball charToBall(char inputChar) {
 
 void printScore(int scoreFrames[], int totScore){
 	//Display the frame numbers
-	cout << "|Frame: ";
+	cout << "|Frame";
 	for (int i = 1; i <= 10; i++) {
 		printf("|%3d", i);
 	}
-	cout << "| TOT |\n";
+	cout << "|TOTAL|\n";
 	
 	//Divider...
-	cout << "|------  --- --- --- --- --- --- --- --- --- ---|=====|\n";
+	//cout << "|=====|---|---|---|---|---|---|---|---|---|---|=====|\n";
+	cout << "|=====|===|===|===|===|===|===|===|===|===|===|=====|\n";
 	
 	//Display the scores for each frame, including total
-	cout << "|Score: ";
+	cout << "|Score";
 	for (int i = 1; i <= 10; i++) {
 		printf("|%3d", scoreFrames[i - 1]);
 	}
-	cout << "| " << totScore << " |\n\n";
+	printf("| %3d |\n\n", totScore);
 	
 	return;
 }
