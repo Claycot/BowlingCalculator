@@ -1,9 +1,12 @@
 //Bowling game calculator
+//Uses either string input or file input
+//Created by Claycot, 2017-2018
 
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <deque>
+#include <iostream> //User input 
+#include <stdio.h> //This was quicker than <iomanip> for outputting score
+#include <string> //Used for manipulating string input, as a result of notation
+#include <fstream> //Used for reading from files
+#include <deque> //Used for scoring each frame
 
 using namespace std;
 
@@ -25,6 +28,7 @@ enum Ball {
 string processInput(string rawInput, int ballsInFrame[]);
 int scoreFrame(Ball gameBalls[], int strikeShift, int index);
 Ball charToBall(char inputChar);
+void printScore(int scoreFrames[], int totScore);
 
 int main (int argc, char* argv[]) {
 	//Greet user once on program run
@@ -43,7 +47,8 @@ int main (int argc, char* argv[]) {
 	if (argc == 2) {
 		//Get bowling strings from file
 		ifstream inputFile;
-		inputFile.open("input.txt");	
+		string fileName = argv[1];
+		inputFile.open(fileName);	
 		string tempLine = "";
 		while (!inputFile.eof()) {
 			inputFile >> ws;	
@@ -96,8 +101,8 @@ int main (int argc, char* argv[]) {
 			}
 			
 			//If a valid score was calculated, output that score
-			if (score > -1){
-				cout << "Score: " << score << "\n\n";
+			if (score > -1) {
+				printScore(frameScore, score);
 			}
 		}
 	} while (userInput != "q" && userInput != "Q");
@@ -177,7 +182,7 @@ int scoreFrame(Ball gameBalls[], int strikeShift, int index) {
 	}
 	
 	//Output score for each frame?
-	cout << "Frame #" << index + 1 << " score: " << score << "\n";
+	//cout << "Frame #" << index + 1 << " score: " << score << "\n";
 	
 	return score;
 }
@@ -200,4 +205,25 @@ Ball charToBall(char inputChar) {
 	}
 	
 	return outputBall;
+}
+
+void printScore(int scoreFrames[], int totScore){
+	//Display the frame numbers
+	cout << "|Frame: ";
+	for (int i = 1; i <= 10; i++) {
+		printf("|%3d", i);
+	}
+	cout << "| TOT |\n";
+	
+	//Divider...
+	cout << "|------  --- --- --- --- --- --- --- --- --- ---|=====|\n";
+	
+	//Display the scores for each frame, including total
+	cout << "|Score: ";
+	for (int i = 1; i <= 10; i++) {
+		printf("|%3d", scoreFrames[i - 1]);
+	}
+	cout << "| " << totScore << " |\n\n";
+	
+	return;
 }
